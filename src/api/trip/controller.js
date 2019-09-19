@@ -1,9 +1,16 @@
 const Post = require('./model');
-const User = require('../users/model');
 const { success, redirect} = require('../responses');
 
 const noop = (val) => val;
-const getDBValue = (val, modifierFunc = parseFloat) => {
+const getNumValue = (num) => {
+  const _num = parseFloat(num);
+  console.log(num, _num);
+  if (Number.isNaN(_num)) {
+    return null;
+  }
+  return _num;
+}
+const getDBValue = (val, modifierFunc = getNumValue) => {
   return !val || val === 'NODATA' ? null : modifierFunc(val);
 }
 
@@ -38,7 +45,7 @@ const create = async (req, res) => {
     AMBIENT_AIR_TEMP, //: '',
     ENGINE_RUNTIME, //: '00:05:27',
     CONTROL_MODULE_VOLTAGE, //: '14.0V',
-    VIN: vin, //: '1C4HJWEGXFL514955',
+    VIN: vin = '', //: '1C4HJWEGXFL514955',
     ENGINE_LOAD, //: '24.3%',
     FUEL_CONSUMPTION_RATE, //: 'NODATA',
     INTAKE_MANIFOLD_PRESSURE, //: '33kPa'
@@ -65,8 +72,7 @@ const create = async (req, res) => {
   const intake_manifold_pressure = getDBValue(INTAKE_MANIFOLD_PRESSURE);
   const raw = JSON.stringify(req.body);
 
-  const post = await Post.query()
-    .insertAndFetch({
+  const post = await Post.query().insert({
       time,
       vin,
       latitude,

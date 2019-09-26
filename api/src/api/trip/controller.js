@@ -12,6 +12,27 @@ const getNumValue = (num) => {
 }
 const getDBValue = (val, modifierFunc = getNumValue) => {
   return !val || val === 'NODATA' ? null : modifierFunc(val);
+};
+
+const getAll = async (req, res) => {
+  console.log('GETTT');
+  const result = await Post.query()
+    .select(
+      'time',
+      'vin',
+      'latitude',
+      'longitude',
+      'altitude',
+      'engine_rpm',
+      'speed',
+      'throttle_pos',
+    )
+    .where(
+    'time',
+    '>',
+    '2019-09-26 01:54:10.727000 +00:00',
+  );
+  success(res, result);
 }
 
 const create = async (req, res) => {
@@ -103,4 +124,5 @@ const create = async (req, res) => {
 
 module.exports = {
   create,
+  getAll,
 };

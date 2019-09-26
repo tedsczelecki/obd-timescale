@@ -5,7 +5,7 @@ const Controller = require('./controller');
 const router = Router();
 
 router
+  .get('/feed', Controller.getAll)
   .post('/feed', Controller.create)
-  .get('/feed', (req, res) => res.send('no') )
 
 module.exports = router;
